@@ -2,7 +2,7 @@
 // Copyright (c) 2023 Gabriel Correa <gabriel.correasb@protonmail.com>
 //
 
-package main
+package log_utils
 
 import (
 	"context"

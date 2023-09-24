@@ -8,8 +8,11 @@ import (
 	"flag"
 	"net/http"
 
+	// Importing services created to our api
 	coinApi "coinfetcher/api"
 	healthService "coinfetcher/services/health"
+	logUtils "coinfetcher/services/log"
+	metricsUtils "coinfetcher/services/metrics"
 	priceService "coinfetcher/services/price"
 )
 
@@ -20,8 +23,8 @@ func main() {
 	priceFetcher := priceService.NewPriceFetcher()
 	healthChecker := healthService.NewHealthChecker()
 
-	coinService := NewPriceLogService(NewPriceMetricService(priceFetcher))
-	healthService := NewHealthLogService(NewHealthMetricService(healthChecker))
+	coinService := logUtils.NewPriceLogService(metricsUtils.NewPriceMetricService(priceFetcher))
+	healthService := logUtils.NewHealthLogService(metricsUtils.NewHealthMetricService(healthChecker))
 
 	server := coinApi.NewJSONAPIServer(*listenAddr, coinService, healthService)
 
