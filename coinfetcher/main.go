@@ -9,18 +9,21 @@ import (
 	"net/http"
 
 	coinApi "coinfetcher/api"
-	priceService "coinfetcher/services"
+	healthService "coinfetcher/services/health"
+	priceService "coinfetcher/services/price"
 )
 
 func main() {
 	listenAddr := flag.String("listenaddr", ":9899", "listen address the service is running")
 	flag.Parse()
 
-	fetcher := priceService.NewPriceFetcher()
+	priceFetcher := priceService.NewPriceFetcher()
+	healthChecker := healthService.NewHealthChecker()
 
-	coinService := NewLogService(NewMetricService(fetcher))
+	coinService := NewPriceLogService(NewPriceMetricService(priceFetcher))
+	healthService := NewHealthLogService(NewHealthMetricService(healthChecker))
 
-	server := coinApi.NewJSONAPIServer(*listenAddr, coinService)
+	server := coinApi.NewJSONAPIServer(*listenAddr, coinService, healthService)
 
 	// Serve the REDOC Swagger UI HTML
 	http.Handle("/swagger/redoc.html", http.FileServer(http.Dir("./docs")))

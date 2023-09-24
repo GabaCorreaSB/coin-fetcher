@@ -8,3 +8,9 @@ type PriceResponse struct {
 	Timestamp time.Time `json:"timestamp"`
 	Vol24Hr   float64   `json:"vol24Hr"`
 }
+
+type HealthResponse struct {
+	Status         string    `json:"status"`
+	GeckoApiStatus string    `json:"geckoapistatus"`
+	Timestamp      time.Time `json:"timestamp"`
+}

@@ -2,8 +2,7 @@ build:
 	go build -o bin/coinfetcher
 
 run: build
-	mkdir logs
-	./bin/coinfetcher >> logs/coin_api.log
+	./bin/coinfetcher
 
 swag:
 	${HOME}/go/bin/swag init

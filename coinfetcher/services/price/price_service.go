@@ -1,4 +1,4 @@
-package coin_service
+package price_service
 
 import (
 	"context"

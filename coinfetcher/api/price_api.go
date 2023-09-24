@@ -5,7 +5,7 @@
 // @host localhost:9899
 // @BasePath /v1
 // @schemes http
-package coin_api
+package price_api
 
 import (
 	"context"
@@ -13,35 +13,31 @@ import (
 	"math/rand"
 	"net/http"
 
-	"time"
-
-	priceService "coinfetcher/services"
+	healthService "coinfetcher/services/health"
+	priceService "coinfetcher/services/price"
 	"coinfetcher/types"
 )
-
-type PriceResponse struct {
-	Ticker    string    `json:"ticker"`
-	Price     float64   `json:"price"`
-	Timestamp time.Time `json:"timestamp"`
-	Vol24Hr   float64   `json:"vol24Hr"`
-}
 
 type APIFunc func(context.Context, http.ResponseWriter, *http.Request) error
 
 type JSONAPIServer struct {
-	listenAddr string
-	svc        priceService.PriceFetcher
+	listenAddr     string
+	pricingService priceService.PriceFetcher
+	statusService  healthService.HealthChecker
 }
 
-func NewJSONAPIServer(listenAddr string, svc priceService.PriceFetcher) *JSONAPIServer {
+func NewJSONAPIServer(listenAddr string, pricingService priceService.PriceFetcher, statusService healthService.HealthChecker) *JSONAPIServer {
 	return &JSONAPIServer{
-		listenAddr: listenAddr,
-		svc:        svc,
+		listenAddr:     listenAddr,
+		pricingService: pricingService,
+		statusService:  statusService,
 	}
 }
 
 func (s *JSONAPIServer) Run() {
 	http.HandleFunc("/v1/price", s.makeHTTPHandlerFunc(s.handleFetchPrice))
+	http.HandleFunc("/v1/health", s.makeHTTPHandlerFunc(s.handleApiHealth))
+
 	http.ListenAndServe(s.listenAddr, nil)
 }
 
@@ -65,7 +61,7 @@ func (s *JSONAPIServer) makeHTTPHandlerFunc(apiFn APIFunc) http.HandlerFunc {
 func (s *JSONAPIServer) handleFetchPrice(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	ticker := r.URL.Query().Get("ticker")
 
-	price, vol24Hr, timestamp, err := s.svc.FetchPrice(ctx, ticker)
+	price, vol24Hr, timestamp, err := s.pricingService.FetchPrice(ctx, ticker)
 	if err != nil {
 		return err
 	}
@@ -78,6 +74,22 @@ func (s *JSONAPIServer) handleFetchPrice(ctx context.Context, w http.ResponseWri
 	}
 
 	return s.writeJSON(w, http.StatusOK, &priceResp)
+}
+
+func (s *JSONAPIServer) handleApiHealth(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+
+	health, geckoStatus, timestamp, err := s.statusService.CheckHealth(ctx)
+	if err != nil {
+		return err
+	}
+
+	healtResponse := types.HealthResponse{
+		Status:         health,
+		GeckoApiStatus: geckoStatus,
+		Timestamp:      timestamp,
+	}
+
+	return s.writeJSON(w, http.StatusOK, &healtResponse)
 }
 
 func (s *JSONAPIServer) writeJSON(w http.ResponseWriter, statusCode int, v interface{}) error {
