@@ -2,7 +2,8 @@ build:
 	go build -o bin/pricefetcher
 
 run: build
-	./bin/pricefetcher
+	mkdir logs
+	./bin/pricefetcher >> logs/coin_api.log
 
 swag:
 	${HOME}/go/bin/swag init

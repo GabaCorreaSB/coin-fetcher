@@ -5,7 +5,7 @@
 // @host localhost:9899
 // @BasePath /v1
 // @schemes http
-package main
+package coin_api
 
 import (
 	"context"
@@ -15,7 +15,8 @@ import (
 
 	"time"
 
-	"github.com/GabaCorreaSB/coin-fetcher/types"
+	priceService "coinfetcher/services"
+	"coinfetcher/types"
 )
 
 type PriceResponse struct {
@@ -29,10 +30,10 @@ type APIFunc func(context.Context, http.ResponseWriter, *http.Request) error
 
 type JSONAPIServer struct {
 	listenAddr string
-	svc        PriceFetcher
+	svc        priceService.PriceFetcher
 }
 
-func NewJSONAPIServer(listenAddr string, svc PriceFetcher) *JSONAPIServer {
+func NewJSONAPIServer(listenAddr string, svc priceService.PriceFetcher) *JSONAPIServer {
 	return &JSONAPIServer{
 		listenAddr: listenAddr,
 		svc:        svc,

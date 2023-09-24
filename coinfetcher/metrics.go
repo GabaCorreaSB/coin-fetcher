@@ -8,13 +8,15 @@ import (
 	"context"
 	"fmt"
 	"time"
+
+	priceService "coinfetcher/services"
 )
 
 type metricService struct {
-	next PriceFetcher
+	next priceService.PriceFetcher
 }
 
-func NewMetricService(next PriceFetcher) PriceFetcher {
+func NewMetricService(next priceService.PriceFetcher) priceService.PriceFetcher {
 	return &metricService{
 		next: next,
 	}

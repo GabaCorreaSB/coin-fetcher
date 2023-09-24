@@ -8,14 +8,16 @@ import (
 	"context"
 	"time"
 
+	priceService "coinfetcher/services"
+
 	log "github.com/sirupsen/logrus"
 )
 
 type logService struct {
-	next PriceFetcher
+	next priceService.PriceFetcher
 }
 
-func NewLogService(next PriceFetcher) PriceFetcher {
+func NewLogService(next priceService.PriceFetcher) priceService.PriceFetcher {
 	return &logService{
 		next: next,
 	}

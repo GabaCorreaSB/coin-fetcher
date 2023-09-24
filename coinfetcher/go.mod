@@ -1,4 +1,4 @@
-module github.com/GabaCorreaSB/coin-fetcher
+module coinfetcher
 
 go 1.18
 
