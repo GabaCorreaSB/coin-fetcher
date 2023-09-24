@@ -1,5 +1,14 @@
 definitions:
-  main.PriceResponse:
+  price_api.HealthResponse:
+    properties:
+      geckoapistatus:
+        type: string
+      status:
+        type: string
+      timestamp:
+        type: string
+    type: object
+  price_api.PriceResponse:
     properties:
       price:
         type: number
@@ -13,6 +22,18 @@ definitions:
 info:
   contact: {}
 paths:
+  /v1/health:
+    get:
+      description: This gets the Gecko API health status
+      operationId: checkHealth
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/price_api.HealthResponse'
+      summary: Get Gecko API health status Endpoint
   /v1/price:
     get:
       description: Fetches the price of a given coin ticker.
@@ -29,6 +50,6 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.PriceResponse'
-      summary: Fetch coin price
+            $ref: '#/definitions/price_api.PriceResponse'
+      summary: Fetch coin price Endpoint
 swagger: "2.0"

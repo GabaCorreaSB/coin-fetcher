@@ -2,21 +2,34 @@
     "swagger": "2.0",
     "info": {
         "title": "Coin Fetcher API",
-        "version": "v1.0",
-        "description": "API That fetches the price for any specified crypto coin created by Gabriel Correa dos Santos Barbosa",
-        "contact": {
-            "name": "Gabriel Correa dos Santos Barbosa",
-            "email": "gabriel.correasb@protonmail.com"
-          }
+        "version":"version 1.0" 
     },
     "paths": {
+        "/v1/health": {
+            "get": {
+                "description": "This gets the Gecko API health status",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get Gecko API health status Endpoint",
+                "operationId": "checkHealth",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/price_api.HealthResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/price": {
             "get": {
                 "description": "Fetches the price of a given coin ticker.",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Fetch coin price",
+                "summary": "Fetch coin price Endpoint",
                 "operationId": "fetchPrice",
                 "parameters": [
                     {
@@ -31,7 +44,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.PriceResponse"
+                            "$ref": "#/definitions/price_api.PriceResponse"
                         }
                     }
                 }
@@ -39,24 +52,34 @@
         }
     },
     "definitions": {
-        "main.PriceResponse": {
+        "price_api.HealthResponse": {
+            "type": "object",
+            "properties": {
+                "geckoapistatus": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "timestamp": {
+                    "type": "string"
+                }
+            }
+        },
+        "price_api.PriceResponse": {
             "type": "object",
             "properties": {
                 "price": {
-                    "type": "number",
-                    "description": "The current price of the specified coin."
+                    "type": "number"
                 },
                 "ticker": {
-                    "type": "string",
-                    "description": "The coin ticker symbol."
+                    "type": "string"
                 },
                 "timestamp": {
-                    "type": "string",
-                    "description": "The timestamp when the price was fetched."
+                    "type": "string"
                 },
                 "vol24Hr": {
-                    "type": "number",
-                    "description": "The 24-hour trading volume of the coin."
+                    "type": "number"
                 }
             }
         }

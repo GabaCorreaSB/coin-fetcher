@@ -12,6 +12,7 @@ import (
 	"encoding/json"
 	"math/rand"
 	"net/http"
+	"time"
 
 	healthService "coinfetcher/services/health"
 	priceService "coinfetcher/services/price"
@@ -19,6 +20,19 @@ import (
 )
 
 type APIFunc func(context.Context, http.ResponseWriter, *http.Request) error
+
+type PriceResponse struct {
+	Ticker    string    `json:"ticker"`
+	Price     float64   `json:"price"`
+	Timestamp time.Time `json:"timestamp"`
+	Vol24Hr   float64   `json:"vol24Hr"`
+}
+
+type HealthResponse struct {
+	Status         string    `json:"status"`
+	GeckoApiStatus string    `json:"geckoapistatus"`
+	Timestamp      time.Time `json:"timestamp"`
+}
 
 type JSONAPIServer struct {
 	listenAddr     string
@@ -76,6 +90,12 @@ func (s *JSONAPIServer) handleFetchPrice(ctx context.Context, w http.ResponseWri
 	return s.writeJSON(w, http.StatusOK, &priceResp)
 }
 
+// @Summary Get Gecko API health status Endpoint
+// @Description This gets the Gecko API health status
+// @ID checkHealth
+// @Produce json
+// @Success 200 {object} HealthResponse
+// @Router /v1/health [get]
 func (s *JSONAPIServer) handleApiHealth(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 
 	health, geckoStatus, timestamp, err := s.statusService.CheckHealth(ctx)

@@ -15,13 +15,31 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/v1/health": {
+            "get": {
+                "description": "This gets the Gecko API health status",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get Gecko API health status Endpoint",
+                "operationId": "checkHealth",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/price_api.HealthResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/price": {
             "get": {
                 "description": "Fetches the price of a given coin ticker.",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Fetch coin price",
+                "summary": "Fetch coin price Endpoint",
                 "operationId": "fetchPrice",
                 "parameters": [
                     {
@@ -36,7 +54,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.PriceResponse"
+                            "$ref": "#/definitions/price_api.PriceResponse"
                         }
                     }
                 }
@@ -44,7 +62,21 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "main.PriceResponse": {
+        "price_api.HealthResponse": {
+            "type": "object",
+            "properties": {
+                "geckoapistatus": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "timestamp": {
+                    "type": "string"
+                }
+            }
+        },
+        "price_api.PriceResponse": {
             "type": "object",
             "properties": {
                 "price": {
