@@ -53,8 +53,8 @@ func (s *metricHealthService) CheckHealth(ctx context.Context) (status string, g
 		fmt.Printf("Error getting status for Gecko API: %s\n", err)
 	} else {
 		fmt.Printf("Successfully fetched status for Gecko API")
-		fmt.Printf("Status: %f\n", status)
-		fmt.Printf("Gecko Status: %f\n", geckoStatus)
+		fmt.Printf("Status: %s\n", status)
+		fmt.Printf("Gecko Status: %s\n", geckoStatus)
 		fmt.Printf("Check Status Timestamp: %s\n", timestamp.String())
 	}
 	return status, geckoStatus, timestamp, err
