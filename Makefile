@@ -3,3 +3,6 @@ build:
 
 run: build
 	./bin/pricefetcher
+
+swag:
+	${HOME}/go/bin/swag init

@@ -1,0 +1,34 @@
+definitions:
+  main.PriceResponse:
+    properties:
+      price:
+        type: number
+      ticker:
+        type: string
+      timestamp:
+        type: string
+      vol24Hr:
+        type: number
+    type: object
+info:
+  contact: {}
+paths:
+  /v1/price:
+    get:
+      description: Fetches the price of a given coin ticker.
+      operationId: fetchPrice
+      parameters:
+      - description: Coin ticker symbol
+        in: query
+        name: ticker
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.PriceResponse'
+      summary: Fetch coin price
+swagger: "2.0"

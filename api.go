@@ -2,6 +2,9 @@
 // Copyright (c) 2023 Gabriel Correa <gabriel.correasb@protonmail.com>
 //
 
+// @host localhost:9899
+// @BasePath /v1
+// @schemes http
 package main
 
 import (
@@ -10,8 +13,17 @@ import (
 	"math/rand"
 	"net/http"
 
-	"github.com/GabaCorreaSB/coin-checker/types"
+	"time"
+
+	"github.com/GabaCorreaSB/coin-fetcher/types"
 )
+
+type PriceResponse struct {
+	Ticker    string    `json:"ticker"`
+	Price     float64   `json:"price"`
+	Timestamp time.Time `json:"timestamp"`
+	Vol24Hr   float64   `json:"vol24Hr"`
+}
 
 type APIFunc func(context.Context, http.ResponseWriter, *http.Request) error
 
@@ -28,7 +40,7 @@ func NewJSONAPIServer(listenAddr string, svc PriceFetcher) *JSONAPIServer {
 }
 
 func (s *JSONAPIServer) Run() {
-	http.HandleFunc("/price", s.makeHTTPHandlerFunc(s.handleFetchPrice))
+	http.HandleFunc("/v1/price", s.makeHTTPHandlerFunc(s.handleFetchPrice))
 	http.ListenAndServe(s.listenAddr, nil)
 }
 
@@ -42,6 +54,13 @@ func (s *JSONAPIServer) makeHTTPHandlerFunc(apiFn APIFunc) http.HandlerFunc {
 	}
 }
 
+// @Summary Fetch coin price Endpoint
+// @Description Fetches the price of a given coin ticker.
+// @ID fetchPrice
+// @Produce json
+// @Param ticker query string true "Coin ticker symbol"
+// @Success 200 {object} PriceResponse
+// @Router /v1/price [get]
 func (s *JSONAPIServer) handleFetchPrice(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	ticker := r.URL.Query().Get("ticker")
 

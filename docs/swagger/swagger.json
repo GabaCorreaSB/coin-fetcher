@@ -1,0 +1,64 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Coin Fetcher API",
+        "version": "v1.0",
+        "description": "API That fetches the price for any specified crypto coin created by Gabriel Correa dos Santos Barbosa",
+        "contact": {
+            "name": "Gabriel Correa dos Santos Barbosa",
+            "email": "gabriel.correasb@protonmail.com"
+          }
+    },
+    "paths": {
+        "/v1/price": {
+            "get": {
+                "description": "Fetches the price of a given coin ticker.",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Fetch coin price",
+                "operationId": "fetchPrice",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Coin ticker symbol",
+                        "name": "ticker",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.PriceResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.PriceResponse": {
+            "type": "object",
+            "properties": {
+                "price": {
+                    "type": "number",
+                    "description": "The current price of the specified coin."
+                },
+                "ticker": {
+                    "type": "string",
+                    "description": "The coin ticker symbol."
+                },
+                "timestamp": {
+                    "type": "string",
+                    "description": "The timestamp when the price was fetched."
+                },
+                "vol24Hr": {
+                    "type": "number",
+                    "description": "The 24-hour trading volume of the coin."
+                }
+            }
+        }
+    }
+}

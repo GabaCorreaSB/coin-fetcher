@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/GabaCorreaSB/coin-checker/types"
+	"github.com/GabaCorreaSB/coin-fetcher/types"
 )
 
 type Client struct {
