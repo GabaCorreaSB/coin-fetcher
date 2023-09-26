@@ -1,7 +1,3 @@
-//
-// Copyright (c) 2023 Gabriel Correa <gabriel.correasb@protonmail.com>
-//
-
 package health_service
 
 import (
@@ -12,33 +8,36 @@ import (
 	"time"
 )
 
-// Creating structure for status data.
+// Creating a structure for status data.
 var data struct {
 	GeckoStatus string `json:"gecko_says"`
 }
 
-// healthChecker is an interface that can fetch a price.
+// HealthChecker is an interface that can check the health of a service.
 type HealthChecker interface {
 	CheckHealth(context.Context) (string, string, time.Time, error)
 }
 
-// healtChecker implements the HealthChecker interface.
+// healthChecker implements the HealthChecker interface.
 type healthChecker struct{}
 
+// NewHealthChecker creates a new instance of the HealthChecker.
 func NewHealthChecker() HealthChecker {
 	return &healthChecker{}
 }
 
-// Fetching the data
+// CheckHealth method of healthChecker.
+// It checks the health of the CoinGecko API by making an HTTP request.
 func (s *healthChecker) CheckHealth(ctx context.Context) (string, string, time.Time, error) {
-	price, vol24Hr, timestamp, err := CheckGeckoHealth()
+	// Call the CheckGeckoHealth function to check the health of the CoinGecko API.
+	status, geckoStatus, timestamp, err := CheckGeckoHealth()
 	if err != nil {
 		return "", "", time.Time{}, fmt.Errorf("failed to fetch crypto price: %v", err)
 	}
-	return price, vol24Hr, timestamp, nil
+	return status, geckoStatus, timestamp, nil
 }
 
-// Function that takes care of checking gecko api status
+// CheckGeckoHealth function checks the health of the CoinGecko API.
 func CheckGeckoHealth() (string, string, time.Time, error) {
 	const coingeckoAPI = "https://api.coingecko.com/api/v3/ping"
 
